@@ -52,8 +52,9 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
 
   useEffect(() => {
     if (!resolvedParams) return;
+    const params = resolvedParams; // Store in local variable for TypeScript
     async function load() {
-      const chapterData = await fetchChapter(resolvedParams.slug, resolvedParams.chapterId);
+      const chapterData = await fetchChapter(params.slug, params.chapterId);
       setData(chapterData);
       if (chapterData?.chapter?.id) {
         const [commentsData, adInsertsData] = await Promise.all([

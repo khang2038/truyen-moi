@@ -17,8 +17,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Taptap comics - Đọc Truyện Tranh Online',
+  title: 'Clap Comic - Đọc Truyện Tranh Online',
   description: 'Website đọc truyện tranh online miễn phí',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

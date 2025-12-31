@@ -47,7 +47,7 @@ export async function fetchHomeData(): Promise<HomeData> {
       response: error.response?.status,
     });
     // Return empty data instead of crashing
-    return { series: [], trending: [] };
+    return { series: [], trending: [], featured: null };
   }
 }
 

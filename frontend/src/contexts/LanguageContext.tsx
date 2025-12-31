@@ -36,7 +36,7 @@ const translations: Record<Language, Record<string, any>> = {
       new: 'Mới cập nhật',
     },
     home: {
-      title: 'Taptap comics',
+      title: 'Clap Comic',
       subtitle: 'Đọc truyện tranh online miễn phí',
       newUpdates: 'Mới cập nhật',
       trending: 'Đang hot',
@@ -104,7 +104,7 @@ const translations: Record<Language, Record<string, any>> = {
       new: 'New Updates',
     },
     home: {
-      title: 'Taptap comics',
+      title: 'Clap Comic',
       subtitle: 'Read comics online for free',
       newUpdates: 'New Updates',
       trending: 'Trending',

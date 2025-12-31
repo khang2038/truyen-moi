@@ -1,0 +1,98 @@
+{
+  "common": {
+    "home": "Trang chủ",
+    "admin": "Admin",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "create": "Tạo mới",
+    "search": "Tìm kiếm",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "admin": "Admin",
+    "trending": "Đang hot",
+    "new": "Mới cập nhật"
+  },
+  "home": {
+    "title": "Truyện Mới",
+    "subtitle": "Đọc truyện tranh online miễn phí",
+    "newUpdates": "Mới cập nhật",
+    "trending": "Đang hot",
+    "readNow": "Đọc ngay",
+    "author": "Tác giả",
+    "viewCount": "lượt xem",
+    "readCount": "lượt đọc",
+    "featured": "Nổi bật"
+  },
+  "series": {
+    "title": "Chi tiết truyện",
+    "chapters": "Danh sách chương",
+    "chapterCount": "chương",
+    "description": "Mô tả",
+    "categories": "Thể loại",
+    "status": "Trạng thái"
+  },
+  "chapter": {
+    "title": "Đọc truyện",
+    "prev": "Chương trước",
+    "next": "Chương tiếp",
+    "list": "Danh sách",
+    "comments": "Bình luận",
+    "writeComment": "Viết bình luận...",
+    "authorName": "Tên của bạn (tùy chọn)",
+    "submit": "Gửi bình luận",
+    "anonymous": "Ẩn danh"
+  },
+  "ranking": {
+    "title": "Bảng xếp hạng",
+    "day": "Hôm nay",
+    "week": "Tuần này",
+    "month": "Tháng này",
+    "readCount": "Lượt đọc",
+    "viewCount": "Lượt xem",
+    "rank": "Hạng",
+    "noData": "Chưa có dữ liệu"
+  },
+  "admin": {
+    "title": "Quản trị hệ thống",
+    "dashboard": "Tổng quan",
+    "series": "Quản lý truyện",
+    "createSeries": "Tạo truyện mới",
+    "createChapter": "Tạo chương mới",
+    "users": "Quản lý người dùng",
+    "totalSeries": "Tổng số truyện",
+    "totalUsers": "Tổng số người dùng",
+    "login": "Đăng nhập Admin",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "seriesTitle": "Tên truyện",
+    "author": "Tác giả",
+    "description": "Mô tả",
+    "coverImage": "Ảnh bìa",
+    "tags": "Tags",
+    "chapterTitle": "Tên chương",
+    "chapterIndex": "Số thứ tự",
+    "chapterSummary": "Tóm tắt",
+    "pages": "Các trang",
+    "selectSeries": "Chọn truyện",
+    "upload": "Upload",
+    "create": "Tạo",
+    "update": "Cập nhật",
+    "delete": "Xóa",
+    "confirmDelete": "Xác nhận xóa",
+    "deleteMessage": "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác.",
+    "userEmail": "Email",
+    "userName": "Tên hiển thị",
+    "role": "Vai trò",
+    "isActive": "Hoạt động",
+    "createUser": "Tạo người dùng mới"
+  }
+}
+

@@ -1,0 +1,98 @@
+{
+  "common": {
+    "home": "Home",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "nav": {
+    "home": "Home",
+    "admin": "Admin",
+    "trending": "Trending",
+    "new": "New Updates"
+  },
+  "home": {
+    "title": "Comic New",
+    "subtitle": "Read comics online for free",
+    "newUpdates": "New Updates",
+    "trending": "Trending",
+    "readNow": "Read Now",
+    "author": "Author",
+    "viewCount": "views",
+    "readCount": "reads",
+    "featured": "Featured"
+  },
+  "series": {
+    "title": "Series Details",
+    "chapters": "Chapter List",
+    "chapterCount": "chapters",
+    "description": "Description",
+    "categories": "Categories",
+    "status": "Status"
+  },
+  "chapter": {
+    "title": "Read Chapter",
+    "prev": "Previous",
+    "next": "Next",
+    "list": "List",
+    "comments": "Comments",
+    "writeComment": "Write a comment...",
+    "authorName": "Your name (optional)",
+    "submit": "Submit",
+    "anonymous": "Anonymous"
+  },
+  "ranking": {
+    "title": "Ranking",
+    "day": "Today",
+    "week": "This Week",
+    "month": "This Month",
+    "readCount": "Reads",
+    "viewCount": "Views",
+    "rank": "Rank",
+    "noData": "No data available"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "dashboard": "Dashboard",
+    "series": "Manage Series",
+    "createSeries": "Create New Series",
+    "createChapter": "Create New Chapter",
+    "users": "Manage Users",
+    "totalSeries": "Total Series",
+    "totalUsers": "Total Users",
+    "login": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "seriesTitle": "Series Title",
+    "author": "Author",
+    "description": "Description",
+    "coverImage": "Cover Image",
+    "tags": "Tags",
+    "chapterTitle": "Chapter Title",
+    "chapterIndex": "Index",
+    "chapterSummary": "Summary",
+    "pages": "Pages",
+    "selectSeries": "Select Series",
+    "upload": "Upload",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "confirmDelete": "Confirm Delete",
+    "deleteMessage": "Are you sure you want to delete? This action cannot be undone.",
+    "userEmail": "Email",
+    "userName": "Display Name",
+    "role": "Role",
+    "isActive": "Active",
+    "createUser": "Create New User"
+  }
+}
+

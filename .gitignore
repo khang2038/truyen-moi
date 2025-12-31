@@ -1,0 +1,78 @@
+########################
+# OS
+########################
+.DS_Store
+Thumbs.db
+
+########################
+# IDE / Editor
+########################
+.vscode/
+.idea/
+
+########################
+# ENV (FE + BE)
+########################
+.env
+.env.*
+backend/.env
+frontend/.env
+
+########################
+# LOGS
+########################
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+########################
+# =====================
+# FRONTEND – Next.js
+# =====================
+########################
+
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.turbo/
+frontend/.vercel/
+frontend/.cache/
+
+# Next.js env local
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+########################
+# =====================
+# BACKEND – NestJS
+# =====================
+########################
+
+backend/node_modules/
+backend/dist/
+backend/coverage/
+backend/.cache/
+
+# NestJS env
+backend/.env.local
+
+########################
+# =====================
+# PACKAGE MANAGERS
+# =====================
+########################
+
+# pnpm
+pnpm-lock.yaml
+pnpm-debug.log*
+
+# npm
+package-lock.json
+
+# yarn
+yarn.lock

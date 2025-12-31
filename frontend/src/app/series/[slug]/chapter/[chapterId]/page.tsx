@@ -102,7 +102,7 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 2,
+            gap: 0,
             mb: 4,
           }}
         >
@@ -118,7 +118,7 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
                   sx={{
                     width: '100%',
                     maxWidth: '100%',
-                    mb: 2,
+                    mb: 0,
                     '& > *': {
                       width: '100%',
                     },
@@ -135,19 +135,15 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
                   position: 'relative',
                   width: '100%',
                   maxWidth: '100%',
-                  mb: 2,
+                  mb: 0,
                 }}
               >
                 <Card
                   sx={{
                     width: '100%',
-                    borderRadius: 3,
+                    borderRadius: 0,
                     overflow: 'hidden',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    transition: 'transform 0.3s ease',
-                    '&:hover': {
-                      transform: 'scale(1.01)',
-                    },
+                    boxShadow: 'none',
                   }}
                 >
                   <Box

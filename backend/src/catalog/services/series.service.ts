@@ -6,6 +6,9 @@ import { Category } from '../entities/category.entity';
 import { CreateSeriesDto } from '../dto/create-series.dto';
 import { UpdateSeriesDto } from '../dto/update-series.dto';
 import { slugify } from '../../common/utils/slugify';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 @Injectable()
 export class SeriesService {
@@ -40,10 +43,14 @@ export class SeriesService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, includeChapters = true) {
+    const relations = ['categories'];
+    if (includeChapters) {
+      relations.push('chapters');
+    }
     return this.seriesRepo.findOne({
       where: { id },
-      relations: ['categories', 'chapters'],
+      relations,
     });
   }
 
@@ -106,8 +113,63 @@ export class SeriesService {
   async remove(id: string) {
     const series = await this.findOne(id);
     if (!series) throw new Error('Series not found');
+    
+    const uploadDir = process.env.UPLOAD_DIR || './uploads';
+    
+    // Delete cover image if exists
+    if (series.coverImage) {
+      try {
+        const coverImagePath = this.extractFilePath(series.coverImage, uploadDir);
+        if (coverImagePath && existsSync(coverImagePath)) {
+          await unlink(coverImagePath);
+          console.log(`[SeriesService] Deleted cover image: ${coverImagePath}`);
+        }
+      } catch (error) {
+        console.error(`[SeriesService] Error deleting cover image:`, error);
+        // Continue deletion even if image deletion fails
+      }
+    }
+    
+    // Delete all chapter images
+    if (series.chapters && series.chapters.length > 0) {
+      for (const chapter of series.chapters) {
+        if (chapter.pages && chapter.pages.length > 0) {
+          for (const pageUrl of chapter.pages) {
+            try {
+              const pagePath = this.extractFilePath(pageUrl, uploadDir);
+              if (pagePath && existsSync(pagePath)) {
+                await unlink(pagePath);
+                console.log(`[SeriesService] Deleted chapter page: ${pagePath}`);
+              }
+            } catch (error) {
+              console.error(`[SeriesService] Error deleting chapter page:`, error);
+              // Continue deletion even if image deletion fails
+            }
+          }
+        }
+      }
+    }
+    
     await this.seriesRepo.remove(series);
     return { message: 'Series deleted' };
+  }
+
+  /**
+   * Extract file path from URL
+   * Example: http://localhost:8080/uploads/123456.jpg -> ./uploads/123456.jpg
+   */
+  private extractFilePath(url: string, uploadDir: string): string | null {
+    if (!url) return null;
+    
+    // Extract filename from URL (everything after last /)
+    const filename = url.split('/').pop();
+    if (!filename) return null;
+    
+    // Remove query parameters if any
+    const cleanFilename = filename.split('?')[0];
+    
+    // Return full path
+    return join(process.cwd(), uploadDir, cleanFilename);
   }
 
   async incrementView(id: string) {

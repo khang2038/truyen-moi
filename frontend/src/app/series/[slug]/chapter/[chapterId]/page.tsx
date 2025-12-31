@@ -96,14 +96,14 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
   return (
     <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh' }}>
       <ReaderNav slug={resolvedParams?.slug || ''} current={data.chapter} prev={data.prev} next={data.next} />
-      <Container sx={{ py: 3, maxWidth: '100%', px: { xs: 1, sm: 2 } }}>
+      <Container sx={{ maxWidth: { xs: '100%', md: '1200px' }, px: { xs: 0, sm: 0, md: 2 } }}>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: 0,
-            mb: 4,
+            mb: 0,
           }}
         >
           {data.chapter.pages.flatMap((url, idx) => {
@@ -136,36 +136,31 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
                   width: '100%',
                   maxWidth: '100%',
                   mb: 0,
+                  p: 0,
+                  m: 0,
                 }}
               >
-                <Card
+                <Box
                   sx={{
+                    position: 'relative',
                     width: '100%',
-                    borderRadius: 0,
-                    overflow: 'hidden',
-                    boxShadow: 'none',
+                    bgcolor: 'grey.100',
+                    minHeight: 400,
+                    p: 0,
+                    m: 0,
                   }}
                 >
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      width: '100%',
-                      bgcolor: 'grey.100',
-                      minHeight: 400,
-                    }}
-                  >
-                    <Image
-                      src={url}
-                      alt={`${t('chapter.title')} ${idx + 1}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                      unoptimized
-                      priority={idx < 3}
-                    />
-                  </Box>
-                </Card>
+                  <Image
+                    src={url}
+                    alt={`${t('chapter.title')} ${idx + 1}`}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: '100%', height: 'auto', display: 'block', margin: 0, padding: 0 }}
+                    unoptimized
+                    priority={idx < 3}
+                  />
+                </Box>
                 <Chip
                   label={`${idx + 1} / ${data.chapter.pages.length}`}
                   sx={{
@@ -184,7 +179,8 @@ export default function ChapterPage({ params }: { params: Promise<{ slug: string
             return elements;
           })}
         </Box>
-
+      </Container>
+      <Container sx={{ py: 3, maxWidth: { xs: '100%', md: '1200px' }, px: { xs: 1, sm: 2 } }}>
         <Paper
           sx={{
             p: 4,

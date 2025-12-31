@@ -38,7 +38,12 @@ api.interceptors.response.use(
 
 export async function fetchHomeData(): Promise<HomeData> {
   try {
-    const { data } = await api.get('/series');
+    const { data } = await api.get('/series', {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+      },
+    });
     return data;
   } catch (error: any) {
     console.error('Failed to fetch home data:', {

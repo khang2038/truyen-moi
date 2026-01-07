@@ -25,13 +25,19 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     // Handle 401: auto logout and redirect to admin login
+    // Only redirect if user is on admin pages, not on public pages
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Avoid infinite loop if already on login
-      if (!window.location.pathname.startsWith('/admin')) {
-        window.location.href = '/admin';
+      const currentPath = window.location.pathname;
+      // Only handle logout/redirect if on admin pages
+      if (currentPath.startsWith('/admin')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Avoid infinite loop if already on login page
+        if (currentPath !== '/admin') {
+          window.location.href = '/admin';
+        }
       }
+      // For public pages, just reject the error without redirecting
     }
 
     // Handle ECONNRESET and other connection errors

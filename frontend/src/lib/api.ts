@@ -351,9 +351,12 @@ export async function updateAdsConfig(payload: { adsTxt?: string; headerScript?:
 
 export async function getHeaderScript() {
   try {
-    const { data } = await api.get('/admin/ads');
+    // Use public endpoint instead of admin endpoint
+    const { data } = await api.get('/ads/header-script');
     return data?.headerScript || '';
   } catch (error) {
+    // Fallback to empty string if endpoint fails
+    console.error('Failed to fetch header script:', error);
     return '';
   }
 }

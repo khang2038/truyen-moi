@@ -18,5 +18,11 @@ export class AdsController {
     const inserts = await this.adsService.getAdInserts();
     return { inserts };
   }
+
+  @Get('header-script')
+  async getHeaderScript() {
+    const script = await this.adsService.getHeaderScript();
+    return { headerScript: script };
+  }
 }
 

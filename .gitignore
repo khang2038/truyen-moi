@@ -17,6 +17,7 @@ Thumbs.db
 .env.*
 backend/.env
 frontend/.env
+backend/uploads/
 
 ########################
 # LOGS

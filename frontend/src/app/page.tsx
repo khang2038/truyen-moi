@@ -7,8 +7,6 @@ import { fetchHomeData } from '@/lib/api';
 import UpdateIcon from '@mui/icons-material/Update';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
-export const revalidate = 0; // Disable caching for this page
-
 export default async function Home() {
   const data = await fetchHomeData();
   const featured = data.featured ?? data.series[0] ?? data.trending[0];

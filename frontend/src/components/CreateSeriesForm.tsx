@@ -54,7 +54,8 @@ export function CreateSeriesForm() {
       setCoverImage(url);
       setMessage({ type: 'success', text: 'Upload ảnh bìa thành công!' });
     } catch (error) {
-      setMessage({ type: 'error', text: 'Upload ảnh bìa thất bại' });
+      const msg = error instanceof Error ? error.message : 'Upload ảnh bìa thất bại';
+      setMessage({ type: 'error', text: msg });
     } finally {
       setLoading(false);
     }

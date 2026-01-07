@@ -35,7 +35,7 @@ export class UploadController {
         }
         cb(null, true);
       },
-      limits: { fileSize: 5 * 1024 * 1024 },
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB per file
     }),
   )
   async uploadImage(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {

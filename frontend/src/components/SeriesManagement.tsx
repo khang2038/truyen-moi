@@ -282,7 +282,8 @@ export function SeriesManagement() {
                         setEditCoverImage(url);
                         setMessage({ type: 'success', text: 'Upload ảnh thành công!' });
                       } catch (error) {
-                        setMessage({ type: 'error', text: 'Upload ảnh thất bại' });
+                        const msg = error instanceof Error ? error.message : 'Upload ảnh thất bại';
+                        setMessage({ type: 'error', text: msg });
                       } finally {
                         setUploadingImage(false);
                       }

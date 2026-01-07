@@ -28,6 +28,10 @@ import {
   Switch,
   FormControlLabel,
 } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -50,6 +54,8 @@ export function UserManagement() {
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<'admin' | 'publisher' | 'reader'>('reader');
   const [isActive, setIsActive] = useState(true);
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const [showEditPassword, setShowEditPassword] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -242,11 +248,24 @@ export function UserManagement() {
             />
             <TextField
               label="Mật khẩu"
-              type="password"
+              type={showCreatePassword ? 'text' : 'password'}
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowCreatePassword((v) => !v)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showCreatePassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               label="Tên hiển thị"
@@ -289,10 +308,23 @@ export function UserManagement() {
             />
             <TextField
               label="Mật khẩu mới (để trống nếu không đổi)"
-              type="password"
+              type={showEditPassword ? 'text' : 'password'}
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowEditPassword((v) => !v)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showEditPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               label="Tên hiển thị"

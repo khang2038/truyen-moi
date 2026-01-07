@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, DragEvent } from 'react';
 import {
   Box,
   Button,
@@ -38,6 +38,7 @@ export function CreateChapterForm() {
   const [summary, setSummary] = useState('');
   const [pages, setPages] = useState<string[]>([]);
   const [pageUrls, setPageUrls] = useState('');
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   useEffect(() => {
     loadSeries();
@@ -62,7 +63,8 @@ export function CreateChapterForm() {
       setPageUrls((prev) => (prev ? prev + '\n' + urls.join('\n') : urls.join('\n')));
       setMessage({ type: 'success', text: `Upload ${urls.length} ảnh thành công!` });
     } catch (error) {
-      setMessage({ type: 'error', text: 'Upload ảnh thất bại' });
+      const msg = error instanceof Error ? error.message : 'Upload ảnh thất bại';
+      setMessage({ type: 'error', text: msg });
     } finally {
       setLoading(false);
     }
@@ -78,6 +80,26 @@ export function CreateChapterForm() {
     const newPages = pages.filter((_, i) => i !== index);
     setPages(newPages);
     setPageUrls(newPages.join('\n'));
+  };
+
+  const handleDragStart = (index: number) => {
+    setDragIndex(index);
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (index: number) => {
+    if (dragIndex === null || dragIndex === index) return;
+    setPages((prev) => {
+      const updated = [...prev];
+      const [moved] = updated.splice(dragIndex, 1);
+      updated.splice(index, 0, moved);
+      setPageUrls(updated.join('\n'));
+      return updated;
+    });
+    setDragIndex(null);
   };
 
   const handleSubmit = async () => {
@@ -105,8 +127,9 @@ export function CreateChapterForm() {
       setTimeout(() => {
         router.push(`/series/${selectedSeries.slug}`);
       }, 1500);
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Tạo chương thất bại' });
+    } catch (error: any) {
+      const msg = error instanceof Error ? error.message : 'Tạo chương thất bại';
+      setMessage({ type: 'error', text: msg });
     } finally {
       setLoading(false);
     }
@@ -246,7 +269,7 @@ export function CreateChapterForm() {
             {pages.length > 0 && (
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" color="text.secondary" mb={1}>
-                  Xem trước ({pages.length} ảnh):
+                  Xem trước ({pages.length} ảnh) - kéo thả để đổi vị trí:
                 </Typography>
                 <Box
                   sx={{
@@ -260,26 +283,40 @@ export function CreateChapterForm() {
                   }}
                 >
                   {pages.map((url, idx) => (
-                    <Card key={idx}>
-                      <CardMedia
-                        component="img"
-                        image={url}
-                        alt={`Page ${idx + 1}`}
-                        sx={{ height: 200, objectFit: 'cover' }}
-                      />
-                      <CardContent sx={{ p: 1 }}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                          <Chip label={`Trang ${idx + 1}`} size="small" />
-                          <Button
-                            size="small"
-                            color="error"
-                            onClick={() => handleRemovePage(idx)}
-                          >
-                            Xóa
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
+                    <Box
+                      key={idx}
+                      draggable
+                      onDragStart={() => handleDragStart(idx)}
+                      onDragOver={handleDragOver}
+                      onDrop={() => handleDrop(idx)}
+                      sx={{
+                        cursor: 'grab',
+                        borderRadius: 1,
+                        border: dragIndex === idx ? '2px dashed #667eea' : '1px solid rgba(0,0,0,0.1)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Card>
+                        <CardMedia
+                          component="img"
+                          image={url}
+                          alt={`Page ${idx + 1}`}
+                          sx={{ height: 200, objectFit: 'cover' }}
+                        />
+                        <CardContent sx={{ p: 1 }}>
+                          <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Chip label={`Trang ${idx + 1}`} size="small" />
+                            <Button
+                              size="small"
+                              color="error"
+                              onClick={() => handleRemovePage(idx)}
+                            >
+                              Xóa
+                            </Button>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Box>
                   ))}
                 </Box>
               </Box>

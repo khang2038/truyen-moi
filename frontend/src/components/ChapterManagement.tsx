@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, DragEvent } from 'react';
 import {
   Box,
   Paper,
@@ -45,6 +45,8 @@ export function ChapterManagement() {
   const [editTitle, setEditTitle] = useState('');
   const [editIndex, setEditIndex] = useState(0);
   const [editSummary, setEditSummary] = useState('');
+  const [editPages, setEditPages] = useState<string[]>([]);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   useEffect(() => {
     loadSeries();
@@ -95,6 +97,7 @@ export function ChapterManagement() {
     setEditTitle(chapter.title);
     setEditIndex(chapter.index);
     setEditSummary(chapter.summary || '');
+    setEditPages(chapter.pages || []);
     setEditDialog(true);
   };
 
@@ -105,6 +108,7 @@ export function ChapterManagement() {
         title: editTitle,
         index: editIndex,
         summary: editSummary,
+        pages: editPages,
       });
       setMessage({ type: 'success', text: 'Cập nhật chương thành công!' });
       setEditDialog(false);
@@ -133,6 +137,25 @@ export function ChapterManagement() {
     } catch (error) {
       setMessage({ type: 'error', text: 'Xóa thất bại' });
     }
+  };
+
+  const handleDragStart = (index: number) => {
+    setDragIndex(index);
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (index: number) => {
+    if (dragIndex === null || dragIndex === index) return;
+    setEditPages((prev) => {
+      const updated = [...prev];
+      const [moved] = updated.splice(dragIndex, 1);
+      updated.splice(index, 0, moved);
+      return updated;
+    });
+    setDragIndex(null);
   };
 
   if (loading) {
@@ -321,10 +344,10 @@ export function ChapterManagement() {
               value={editSummary}
               onChange={(e) => setEditSummary(e.target.value)}
             />
-            {selectedChapter && selectedChapter.pages && selectedChapter.pages.length > 0 && (
+            {editPages && editPages.length > 0 && (
               <Box>
                 <Typography variant="body2" color="text.secondary" mb={1}>
-                  Ảnh trong chương ({selectedChapter.pages.length} ảnh):
+                  Ảnh trong chương ({editPages.length} ảnh) - kéo thả để đổi vị trí:
                 </Typography>
                 <Box
                   sx={{
@@ -335,20 +358,47 @@ export function ChapterManagement() {
                     overflowY: 'auto',
                   }}
                 >
-                  {selectedChapter.pages.map((url, idx) => (
-                    <CardMedia
+                  {editPages.map((url, idx) => (
+                    <Box
                       key={idx}
-                      component="img"
-                      image={url}
-                      alt={`Page ${idx + 1}`}
+                      draggable
+                      onDragStart={() => handleDragStart(idx)}
+                      onDragOver={handleDragOver}
+                      onDrop={() => handleDrop(idx)}
                       sx={{
-                        width: '100%',
-                        height: 120,
-                        objectFit: 'cover',
+                        position: 'relative',
+                        cursor: 'grab',
                         borderRadius: 1,
-                        border: '1px solid rgba(0,0,0,0.1)',
+                        border: dragIndex === idx ? '2px dashed #667eea' : '1px solid rgba(0,0,0,0.1)',
+                        overflow: 'hidden',
                       }}
-                    />
+                    >
+                      <CardMedia
+                        component="img"
+                        image={url}
+                        alt={`Page ${idx + 1}`}
+                        sx={{
+                          width: '100%',
+                          height: 120,
+                          objectFit: 'cover',
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: 4,
+                          left: 4,
+                          bgcolor: 'rgba(0,0,0,0.6)',
+                          color: 'white',
+                          fontSize: 12,
+                          px: 0.75,
+                          py: 0.25,
+                          borderRadius: 1,
+                        }}
+                      >
+                        {idx + 1}
+                      </Box>
+                    </Box>
                   ))}
                 </Box>
               </Box>

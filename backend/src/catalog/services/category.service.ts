@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../entities/category.entity';
 import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { slugify } from '../../common/utils/slugify';
 
 @Injectable()
@@ -43,5 +44,31 @@ export class CategoryService {
       description: dto.description,
     });
     return this.categoryRepo.save(category);
+  }
+
+  async update(id: string, dto: UpdateCategoryDto) {
+    const category = await this.findOne(id);
+    if (!category) {
+      throw new Error('Category not found');
+    }
+
+    if (dto.name !== undefined) {
+      category.name = dto.name;
+      category.slug = slugify(dto.name);
+    }
+    if (dto.description !== undefined) {
+      category.description = dto.description;
+    }
+
+    return this.categoryRepo.save(category);
+  }
+
+  async remove(id: string) {
+    const category = await this.findOne(id);
+    if (!category) {
+      throw new Error('Category not found');
+    }
+    await this.categoryRepo.remove(category);
+    return { message: 'Category deleted' };
   }
 }

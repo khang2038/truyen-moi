@@ -11,6 +11,10 @@ import {
   Box,
   Card,
 } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login } from '@/lib/api';
 import { AdminLayout } from '@/components/AdminLayout';
 import { RankingSection } from '@/components/RankingSection';
@@ -27,6 +31,7 @@ export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState('');
   const [stats, setStats] = useState({ series: 0, users: 0 });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -92,12 +97,25 @@ export default function AdminPage() {
             />
             <TextField
               label={t('admin.password')}
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               sx={{ bgcolor: 'white', borderRadius: 1 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword((v) => !v)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button
               variant="contained"

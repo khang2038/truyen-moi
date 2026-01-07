@@ -24,6 +24,16 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Handle 401: auto logout and redirect to admin login
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      // Avoid infinite loop if already on login
+      if (!window.location.pathname.startsWith('/admin')) {
+        window.location.href = '/admin';
+      }
+    }
+
     // Handle ECONNRESET and other connection errors
     if (error.code === 'ECONNRESET' || error.code === 'ECONNREFUSED' || error.message?.includes('ECONNRESET')) {
       console.error('[API] Connection error:', {
@@ -38,12 +48,7 @@ api.interceptors.response.use(
 
 export async function fetchHomeData(): Promise<HomeData> {
   try {
-    const { data } = await api.get('/series', {
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-      },
-    });
+    const { data } = await api.get('/series');
     return data;
   } catch (error: any) {
     console.error('Failed to fetch home data:', {
@@ -150,10 +155,18 @@ export async function login(email: string, password: string) {
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
   formData.append('file', file);
-  const { data } = await api.post('/admin/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-  return data.url;
+  try {
+    const { data } = await api.post('/admin/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data.url;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      'Tải ảnh thất bại (tối đa 10MB, định dạng: jpg, jpeg, png, gif, webp)';
+    throw new Error(message);
+  }
 }
 
 export async function createSeries(payload: any) {
@@ -172,8 +185,16 @@ export async function deleteSeries(seriesId: string) {
 }
 
 export async function createChapter(seriesId: string, payload: any) {
-  const { data } = await api.post(`/admin/series/${seriesId}/chapters`, payload);
-  return data;
+  try {
+    const { data } = await api.post(`/admin/series/${seriesId}/chapters`, payload);
+    return data;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      'Tạo chương thất bại. Vui lòng kiểm tra lại số thứ tự và dữ liệu chương.';
+    throw new Error(message);
+  }
 }
 
 export async function updateChapter(chapterId: string, payload: any) {
@@ -260,6 +281,16 @@ export async function createCategory(name: string, description?: string) {
     console.error('Failed to create category:', error);
     throw error;
   }
+}
+
+export async function updateCategory(id: string, payload: { name?: string; description?: string }) {
+  const { data } = await api.patch(`/admin/categories/${id}`, payload);
+  return data;
+}
+
+export async function deleteCategory(id: string) {
+  const { data } = await api.delete(`/admin/categories/${id}`);
+  return data;
 }
 
 // User management APIs

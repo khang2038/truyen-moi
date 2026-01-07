@@ -13,6 +13,7 @@ import { Roles } from '../../auth/roles.decorator';
 import { RolesGuard } from '../../auth/roles.guard';
 import { UserRole } from '../../users/user-role.enum';
 import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { CreateChapterDto } from '../dto/create-chapter.dto';
 import { CreateSeriesDto } from '../dto/create-series.dto';
 import { UpdateChapterDto } from '../dto/update-chapter.dto';
@@ -39,6 +40,19 @@ export class AdminCatalogController {
   @Post('categories')
   createCategory(@Body() dto: CreateCategoryDto) {
     return this.categoryService.create(dto);
+  }
+
+  @Patch('categories/:categoryId')
+  updateCategory(
+    @Param('categoryId') categoryId: string,
+    @Body() dto: UpdateCategoryDto,
+  ) {
+    return this.categoryService.update(categoryId, dto);
+  }
+
+  @Delete('categories/:categoryId')
+  deleteCategory(@Param('categoryId') categoryId: string) {
+    return this.categoryService.remove(categoryId);
   }
 
   @Get('series')

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Chapter } from '../entities/chapter.entity';
@@ -6,9 +6,6 @@ import { Series } from '../entities/series.entity';
 import { CreateChapterDto } from '../dto/create-chapter.dto';
 import { UpdateChapterDto } from '../dto/update-chapter.dto';
 import { slugify } from '../../common/utils/slugify';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
 
 @Injectable()
 export class ChapterService {
@@ -106,6 +103,18 @@ export class ChapterService {
     const series = await this.seriesRepo.findOne({ where: { id: seriesId } });
     if (!series) throw new Error('Series not found');
 
+    // Ensure chapter index is unique per series
+    if (dto.index !== undefined) {
+      const existing = await this.chapterRepo.findOne({
+        where: { seriesId, index: dto.index },
+      });
+      if (existing) {
+        throw new BadRequestException(
+          `Đã tồn tại chương với số thứ tự ${dto.index} trong truyện này. Vui lòng chọn số khác.`,
+        );
+      }
+    }
+
     const slug = dto.title ? `${slugify(dto.title)}-${dto.index || Date.now()}` : undefined;
     const chapter = this.chapterRepo.create({
       ...dto,
@@ -141,45 +150,8 @@ export class ChapterService {
   async remove(id: string) {
     const chapter = await this.findOne(id);
     if (!chapter) throw new Error('Chapter not found');
-    
-    const uploadDir = process.env.UPLOAD_DIR || './uploads';
-    
-    // Delete all chapter page images
-    if (chapter.pages && chapter.pages.length > 0) {
-      for (const pageUrl of chapter.pages) {
-        try {
-          const pagePath = this.extractFilePath(pageUrl, uploadDir);
-          if (pagePath && existsSync(pagePath)) {
-            await unlink(pagePath);
-            console.log(`[ChapterService] Deleted chapter page: ${pagePath}`);
-          }
-        } catch (error) {
-          console.error(`[ChapterService] Error deleting chapter page:`, error);
-          // Continue deletion even if image deletion fails
-        }
-      }
-    }
-    
     await this.chapterRepo.remove(chapter);
     return { message: 'Chapter deleted' };
-  }
-
-  /**
-   * Extract file path from URL
-   * Example: http://localhost:8080/uploads/123456.jpg -> ./uploads/123456.jpg
-   */
-  private extractFilePath(url: string, uploadDir: string): string | null {
-    if (!url) return null;
-    
-    // Extract filename from URL (everything after last /)
-    const filename = url.split('/').pop();
-    if (!filename) return null;
-    
-    // Remove query parameters if any
-    const cleanFilename = filename.split('?')[0];
-    
-    // Return full path
-    return join(process.cwd(), uploadDir, cleanFilename);
   }
 
   async incrementRead(id: string) {

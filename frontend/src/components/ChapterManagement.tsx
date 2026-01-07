@@ -27,8 +27,9 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Link from 'next/link';
-import { fetchAllSeries, deleteChapter, updateChapter, fetchChapters } from '@/lib/api';
+import { fetchAllSeries, deleteChapter, updateChapter, fetchChapters, uploadImage } from '@/lib/api';
 import { Series, Chapter } from '@/types/content';
 
 export function ChapterManagement() {
@@ -344,17 +345,53 @@ export function ChapterManagement() {
               value={editSummary}
               onChange={(e) => setEditSummary(e.target.value)}
             />
-            {editPages && editPages.length > 0 && (
-              <Box>
-                <Typography variant="body2" color="text.secondary" mb={1}>
-                  Ảnh trong chương ({editPages.length} ảnh) - kéo thả để đổi vị trí:
+            <Box>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant="body2" color="text.secondary">
+                  Ảnh trong chương ({editPages.length} ảnh) - kéo thả để đổi vị trí, có thể xóa hoặc upload thêm:
                 </Typography>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<CloudUploadIcon />}
+                  size="small"
+                  sx={{ ml: 2 }}
+                >
+                  Upload thêm ảnh
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden
+                    onChange={async (e) => {
+                      const files = Array.from(e.target.files || []);
+                      if (files.length === 0) return;
+                      try {
+                        const urls = await Promise.all(files.map((f) => uploadImage(f)));
+                        setEditPages((prev) => [...prev, ...urls]);
+                        setMessage({
+                          type: 'success',
+                          text: `Upload thêm ${urls.length} ảnh thành công!`,
+                        });
+                      } catch (error: any) {
+                        const msg =
+                          error instanceof Error
+                            ? error.message
+                            : 'Upload ảnh thất bại, vui lòng thử lại.';
+                        setMessage({ type: 'error', text: msg });
+                      }
+                    }}
+                  />
+                </Button>
+              </Box>
+
+              {editPages && editPages.length > 0 && (
                 <Box
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
                     gap: 1,
-                    maxHeight: 300,
+                    maxHeight: 320,
                     overflowY: 'auto',
                   }}
                 >
@@ -369,8 +406,10 @@ export function ChapterManagement() {
                         position: 'relative',
                         cursor: 'grab',
                         borderRadius: 1,
-                        border: dragIndex === idx ? '2px dashed #667eea' : '1px solid rgba(0,0,0,0.1)',
+                        border:
+                          dragIndex === idx ? '2px dashed #667eea' : '1px solid rgba(0,0,0,0.1)',
                         overflow: 'hidden',
+                        bgcolor: 'background.paper',
                       }}
                     >
                       <CardMedia
@@ -379,7 +418,7 @@ export function ChapterManagement() {
                         alt={`Page ${idx + 1}`}
                         sx={{
                           width: '100%',
-                          height: 120,
+                          height: 130,
                           objectFit: 'cover',
                         }}
                       />
@@ -398,11 +437,31 @@ export function ChapterManagement() {
                       >
                         {idx + 1}
                       </Box>
+                      <Button
+                        size="small"
+                        color="error"
+                        onClick={() => {
+                          const updated = editPages.filter((_, i) => i !== idx);
+                          setEditPages(updated);
+                        }}
+                        sx={{
+                          position: 'absolute',
+                          bottom: 4,
+                          right: 4,
+                          minWidth: 'auto',
+                          px: 1,
+                          py: 0.25,
+                          fontSize: 11,
+                          bgcolor: 'rgba(255,255,255,0.9)',
+                        }}
+                      >
+                        Xóa
+                      </Button>
                     </Box>
                   ))}
                 </Box>
-              </Box>
-            )}
+              )}
+            </Box>
           </Stack>
         </DialogContent>
         <DialogActions>
